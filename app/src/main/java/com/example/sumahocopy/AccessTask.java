@@ -2,6 +2,7 @@ package com.example.sumahocopy;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,30 +11,30 @@ import jcifs.smb.SmbFileInputStream;
 
 public class AccessTask extends AsyncTask<Integer, Integer, String> {
     private TextView textView;
+    private ProgressBar pgBar;
 
-    public AccessTask(TextView txtView)
+    public AccessTask(TextView txtView,ProgressBar pb)
     {
         super();
         textView = txtView;
+        pgBar=pb;
     }
 
     @Override
     protected String doInBackground(Integer... value)
     {
         SmbFile dir;
-        String host = "192.168.1.200";
+
         String user = "user";
         String pswd = "pass";
         String str="**";
         String pathTo = "/mnt/sdcard/Movies/"; //Androidのダウンロード先
-        String pathFrom = "/mnt/sdcard/DCIM/Camera/"; //Androidのupload 元
+
 
         try
         {
             // String path = "smb://" + user + ":" + pswd + "@" + host + "/disk2/temp/";
-            String path = "smb://"  + host + "/disk/VIDEO/mp4/";
-            String path_to = "smb://"  + host + "/disk/Photos/";
-
+            String path = "smb://192.168.1.200/disk/VIDEO/mp4/";
 
 
             dir = new SmbFile(path);
@@ -42,10 +43,10 @@ public class AccessTask extends AsyncTask<Integer, Integer, String> {
             for (int i = 0; i < files.length; i++) {
 
                 String filePath = files[i].getPath();
-                Log.i("log",filePath);
 
                 SmbFileInputStream sfis = new SmbFileInputStream(filePath);
 
+                publishProgress((Integer)(100*i/files.length));
 
                 File dirTo = new File(pathTo);
                 if (!dirTo.exists()) {
@@ -81,6 +82,13 @@ public class AccessTask extends AsyncTask<Integer, Integer, String> {
     protected void onPostExecute(String param)
     {
         textView.setText(param);
+    }
+
+    // 途中経過をメインスレッドに返す
+    @Override
+    protected void onProgressUpdate(Integer... progress) {
+        textView.setText("NASからスマホへ取り込み中..");
+        pgBar.setProgress(progress[0]);
     }
 }
 
