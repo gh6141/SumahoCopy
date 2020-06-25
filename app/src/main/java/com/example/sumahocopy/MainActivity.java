@@ -1,5 +1,6 @@
 package com.example.sumahocopy;
 
+
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,14 +15,16 @@ import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 
 
-@RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
+
 public class MainActivity extends AppCompatActivity {
 
 
@@ -41,13 +44,14 @@ public class MainActivity extends AppCompatActivity {
     private TextInputEditText fromSumaho;
 
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView txtView = (TextView)findViewById(R.id.textView);
+        TextView txtView;
+        txtView = (TextView) findViewById(R.id.textView);
         // txtView.setText("0");
 
         TextInputEditText toNas = (TextInputEditText) findViewById(R.id.textInputEditText);
@@ -63,16 +67,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         task = new AccessTask(txtView,pBar);
-        pBar = findViewById(R.id.progressBar);
+        pBar = (ProgressBar)findViewById(R.id.progressBar);
         task2 = new AccessTask2(txtView,pBar);
 
-        accessbtn = findViewById(R.id.button5);
+        accessbtn = (Button)findViewById(R.id.button5);
         accessbtn.setOnClickListener(AccessListener);
 
-        accessbtn2 = findViewById(R.id.button);
+        accessbtn2 = (Button)findViewById(R.id.button);
         accessbtn2.setOnClickListener(AccessListener2);
 
-        btn_save = findViewById(R.id.button_save);
+        btn_save = (Button)findViewById(R.id.button_save);
         btn_save.setOnClickListener(saveListener);
 
         Samba samba = new Samba();
@@ -112,11 +116,27 @@ public class MainActivity extends AppCompatActivity {
     private android.view.View.OnClickListener saveListener = new android.view.View.OnClickListener() {
         public void onClick(android.view.View v)
         {
-       
-            saveFile("toNas", toNas.getText().toString());
-            saveFile("toSumaho", toSumaho.getText().toString());
-            saveFile("fromNas", fromNas.getText().toString());
-            saveFile("toSumaho", toSumaho.getText().toString());
+
+            try {
+                saveF("toNas", toNas.getText().toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                saveF("toSumaho", toSumaho.getText().toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                saveF("fromNas", fromNas.getText().toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                saveF("toSumaho", toSumaho.getText().toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     };
 
@@ -124,38 +144,37 @@ public class MainActivity extends AppCompatActivity {
 
 
     // ファイルを保存
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void saveFile(String file, String str) {
 
-        // try-with-resources
-        try (FileOutputStream  fileOutputstream = openFileOutput(file,
-                Context.MODE_PRIVATE);){
+    public void saveF(String file, String str) throws IOException {
+        FileOutputStream  fileOutputstream = openFileOutput(file,Context.MODE_PRIVATE);
+        fileOutputstream.write(str.getBytes());
 
-            fileOutputstream.write(str.getBytes());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
+
     // ファイルを読み出し
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public String readFile(String file) {
+
+    public String readFile(String file)  {
         String text = null;
+  try{
+        BufferedReader buffReader =
+                new BufferedReader(
+                        new FileReader(file));
 
-        // try-with-resources
-        try (FileInputStream fileInputStream = openFileInput(file);
-             BufferedReader reader= new BufferedReader(
-                     new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))) {
+        String s;
 
-            String lineBuffer;
-            while( (lineBuffer = reader.readLine()) != null ) {
-                text = lineBuffer ;
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        while( (s = buffReader.readLine()) != null ){
+            text=s;
         }
+
+        buffReader.close();
+
+    } catch (FileNotFoundException e) {
+        e.printStackTrace();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+
 
         return text;
     }
