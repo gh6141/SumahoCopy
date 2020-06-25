@@ -81,6 +81,8 @@ public class AccessTask extends AsyncTask<Integer, Integer, String> {
     @Override
     protected void onPostExecute(String param)
     {
+
+        pgBar.setProgress(100);
         textView.setText(param);
     }
 

@@ -2,27 +2,26 @@ package com.example.sumahocopy;
 
 
 import android.content.Context;
-import android.os.Build;
+
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
+
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 
-import android.view.View;
+
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
-import java.io.File;
+
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileInputStream;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-
 
 
 public class MainActivity extends AppCompatActivity {
@@ -32,10 +31,10 @@ public class MainActivity extends AppCompatActivity {
     private AccessTask task;
     private AccessTask2 task2;
 
-    private TextView txtView;
+
     private Button accessbtn;
     private Button accessbtn2;
-    private ProgressBar pBar;
+  //  private ProgressBar pBar;
     private Button btn_save;
 
     private TextInputEditText toNas;
@@ -54,20 +53,20 @@ public class MainActivity extends AppCompatActivity {
         txtView = (TextView) findViewById(R.id.textView);
         // txtView.setText("0");
 
-        TextInputEditText toNas = (TextInputEditText) findViewById(R.id.textInputEditText);
-        TextInputEditText fromNas = (TextInputEditText) findViewById(R.id.textInputEditTextB);
-        TextInputEditText fromSumaho = (TextInputEditText) findViewById(R.id.textInputEditText2);
-        TextInputEditText toSumaho = (TextInputEditText) findViewById(R.id.textInputEditText2B);
+         toNas = (TextInputEditText) findViewById(R.id.textInputEditText);
+         fromNas = (TextInputEditText) findViewById(R.id.textInputEditTextB);
+         fromSumaho = (TextInputEditText) findViewById(R.id.textInputEditText2);
+         toSumaho = (TextInputEditText) findViewById(R.id.textInputEditText2B);
 
 
         toNas.setText(readFile("toNas.txt"));
         toSumaho.setText(readFile("toSumaho.txt"));
         fromNas.setText(readFile("fromNas.txt"));
-        fromSumaho.setText(readFile("fromSumahos.txt"));
+        fromSumaho.setText(readFile("fromSumaho.txt"));
 
-
-        task = new AccessTask(txtView,pBar);
+        ProgressBar pBar;
         pBar = (ProgressBar)findViewById(R.id.progressBar);
+        task = new AccessTask(txtView,pBar);
         task2 = new AccessTask2(txtView,pBar);
 
         accessbtn = (Button)findViewById(R.id.button5);
@@ -109,7 +108,9 @@ public class MainActivity extends AppCompatActivity {
     private android.view.View.OnClickListener AccessListener2 = new android.view.View.OnClickListener() {
         public void onClick(android.view.View v)
         {
+
             task2.execute(1);
+
         }
     };
 
@@ -118,24 +119,25 @@ public class MainActivity extends AppCompatActivity {
         {
 
             try {
-                saveF("toNas", toNas.getText().toString());
+String tmp=toNas.getText().toString();
+                saveF("toNas.txt", tmp);
             } catch (IOException e) {
-                e.printStackTrace();
+                toNas.setText(e.getMessage());
             }
             try {
-                saveF("toSumaho", toSumaho.getText().toString());
+                saveF("fromSumaho.txt",fromSumaho.getText().toString() );
             } catch (IOException e) {
-                e.printStackTrace();
+                toSumaho.setText(e.getMessage());
             }
             try {
-                saveF("fromNas", fromNas.getText().toString());
+                saveF("fromNas.txt",fromNas.getText().toString() );
             } catch (IOException e) {
-                e.printStackTrace();
+                fromNas.setText(e.getMessage());
             }
             try {
-                saveF("toSumaho", toSumaho.getText().toString());
+                saveF("toSumaho.txt",toSumaho.getText().toString());
             } catch (IOException e) {
-                e.printStackTrace();
+                toSumaho.setText(e.getMessage());
             }
         }
     };
@@ -146,37 +148,33 @@ public class MainActivity extends AppCompatActivity {
     // ファイルを保存
 
     public void saveF(String file, String str) throws IOException {
-        FileOutputStream  fileOutputstream = openFileOutput(file,Context.MODE_PRIVATE);
-        fileOutputstream.write(str.getBytes());
+
+            FileOutputStream  fileOutputstream = openFileOutput(file,Context.MODE_PRIVATE);
+            fileOutputstream.write(str.getBytes());
+
+
 
     }
-
 
     // ファイルを読み出し
 
     public String readFile(String file)  {
         String text = null;
-  try{
-        BufferedReader buffReader =
-                new BufferedReader(
-                        new FileReader(file));
+        BufferedReader in = null;
+        final Context context = this;
+try {
+FileInputStream filex = context.openFileInput(file);
+in = new BufferedReader(new InputStreamReader(filex));
+text=in.readLine();
+in.close();
+} catch (IOException e) {
+    text=e.getMessage();
+}
 
-        String s;
-
-        while( (s = buffReader.readLine()) != null ){
-            text=s;
-        }
-
-        buffReader.close();
-
-    } catch (FileNotFoundException e) {
-        e.printStackTrace();
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
 
 
         return text;
+      //  return "test";
     }
 
 }
