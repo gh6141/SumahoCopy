@@ -57,7 +57,7 @@
         android:layout_width="230dp"
         android:layout_height="47dp"
 
-        android:hint="192.168.1.200/disk/"
+        android:hint="disk/"
         app:layout_constraintBottom_toBottomOf="@id/button"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toRightOf="@id/button"
