@@ -70,7 +70,7 @@
         android:layout_height="47dp"
 
         android:layout_marginBottom="10dp"
-        android:hint="/mnt/sdcard/DCIM/Camera/"
+        android:hint="DCIM/Camera/"
         android:saveEnabled="false"
         app:layout_constraintBottom_toTopOf="@id/button"
         app:layout_constraintHorizontal_bias="0.0"
@@ -79,11 +79,12 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="34dp"
-        android:layout_height="22dp"
+        android:layout_width="94dp"
+        android:layout_height="40dp"
+
         android:layout_marginTop="8dp"
-        android:text="From"
-        app:layout_constraintHorizontal_bias="0.297"
+        android:text="From /mnt/sdcard/"
+        app:layout_constraintHorizontal_bias="0.058"
         app:layout_constraintLeft_toLeftOf="@id/button"
         app:layout_constraintRight_toLeftOf="@id/textInputEditText2"
         app:layout_constraintTop_toTopOf="@id/textInputEditText2" />
@@ -106,7 +107,7 @@
         android:layout_height="47dp"
 
         android:layout_marginBottom="10dp"
-        android:hint="/mnt/sdcard/"
+        android:hint="Movies/"
         app:layout_constraintBottom_toTopOf="@id/button5"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@id/textInputEditTextB"
@@ -114,11 +115,12 @@
 
     <TextView
         android:id="@+id/textView2B"
-        android:layout_width="34dp"
-        android:layout_height="22dp"
+        android:layout_width="97dp"
+        android:layout_height="40dp"
+
         android:layout_marginTop="8dp"
-        android:text="To"
-        app:layout_constraintHorizontal_bias="0.297"
+        android:text="To /mnt/sdcard/"
+        app:layout_constraintHorizontal_bias="0.035"
         app:layout_constraintLeft_toLeftOf="@id/button5"
         app:layout_constraintRight_toLeftOf="@id/textInputEditText2B"
         app:layout_constraintTop_toTopOf="@id/textInputEditText2B" />

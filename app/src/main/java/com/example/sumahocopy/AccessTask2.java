@@ -35,30 +35,36 @@ public class AccessTask2 extends AsyncTask<Integer, Integer, String> {
         File dir;
         String user = "user";
         String pswd = "pass";
-        String str="**";
+        String str="";
         //String pathFrom = "/mnt/sdcard/DCIM/Camera/"; //Androidのupload 元
-        String pathFrom=fromsmh;
+        String pathFrom="/mnt/sdcard/"+fromsmh;
+        String   path_to="smb://"+ipaddress+"/"+tona;
         try
         {
             // String path = "smb://" + user + ":" + pswd + "@" + host + "/disk2/temp/";
             //String path_to = "smb://192.168.1.200/disk/Photos/";
-            String path_to="smb://"+ipaddress+"/"+tona;
+
             dir = new File(pathFrom);
             File[] files = dir.listFiles();
             for (int i = 0; i < files.length; i++) {
                 String filePath = files[i].getPath();
                 FileInputStream sfis = new FileInputStream(filePath);
-                publishProgress((Integer)(100*i/files.length));
+
                 SmbFile dirTo = new SmbFile(path_to);
                 if (!dirTo.exists()) {
                     dirTo.mkdirs();
                 }
 
                 SmbFileOutputStream fos = new SmbFileOutputStream(path_to + files[i].getName());
-                byte buf[] = new byte[1024];
+                int sz=10240000;
+                byte buf[] = new byte[sz];
                 int len;
+                float dv=0;
                 while ((len =sfis.read(buf)) != -1){
                     fos.write(buf, 0, len);
+                    dv=dv+sz;
+                    publishProgress((int)(100*(i+dv/files[i].length())/files.length));
+                 //   publishProgress((Integer)(100*i/files.length));
                 }
                 fos.flush();
                 fos.close();
@@ -69,7 +75,7 @@ public class AccessTask2 extends AsyncTask<Integer, Integer, String> {
         }
         catch(Exception e)
         {
-            Log.e("Err", e.toString());
+            str="Error ストレージの権限を許可してください";
         }
         return str;
     }

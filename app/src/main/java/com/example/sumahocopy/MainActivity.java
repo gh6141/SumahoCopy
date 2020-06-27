@@ -107,35 +107,48 @@ public class MainActivity extends AppCompatActivity {
     private android.view.View.OnClickListener saveListener = new android.view.View.OnClickListener() {
         public void onClick(android.view.View v)
         {
-
+            boolean flg=true;
             try {
                 String tmp=toNas.getText().toString();
                 saveF("toNas.txt", tmp);
             } catch (IOException e) {
-                toNas.setText(e.getMessage());
+                toNas.setText("");
+                flg=flg && false;
             }
+
             try {
                 saveF("fromSumaho.txt",fromSumaho.getText().toString() );
             } catch (IOException e) {
-                toSumaho.setText(e.getMessage());
+                toSumaho.setText("");
+                flg=false&&flg;
             }
+
             try {
                 saveF("fromNas.txt",fromNas.getText().toString() );
             } catch (IOException e) {
-                fromNas.setText(e.getMessage());
+                fromNas.setText("");
+                flg=false&&flg;
             }
+
             try {
                 saveF("toSumaho.txt",toSumaho.getText().toString());
             } catch (IOException e) {
-                toSumaho.setText(e.getMessage());
-            }
+                toSumaho.setText("");
+                flg=false&&flg;}
+
             try {
                 saveF("ipaddress.txt",ipaddress.getText().toString());
             } catch (IOException e) {
-                toSumaho.setText(e.getMessage());
+                toSumaho.setText("");
+                flg=false&&flg;
             }
-            TextView txtView = (TextView) findViewById(R.id.textView);
-            txtView.setText("設定を保存しました");
+                TextView txtView = (TextView) findViewById(R.id.textView);
+            if (flg) {
+                txtView.setText("設定を保存しました");
+            }else{
+                txtView.setText("Error 設定の保存できないものがありました");
+            }
+
         }
 
 
@@ -165,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         text=in.readLine();
         in.close();
         } catch (IOException e) {
-        text=e.getMessage();
+        text="" ;
         }
         return text;
     }

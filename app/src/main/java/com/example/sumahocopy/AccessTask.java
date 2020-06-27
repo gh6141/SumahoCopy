@@ -32,9 +32,9 @@ public class AccessTask extends AsyncTask<Integer, Integer, String> {
         SmbFile dir;
         String user = "user";
         String pswd = "pass";
-        String str="**";
+        String str="";
         //String pathTo = "/mnt/sdcard/Movies/"; //Androidのダウンロード先
-        String pathTo=tosmh;
+        String pathTo="/mnt/sdcard/"+tosmh;
 
         try
         {
@@ -52,10 +52,15 @@ public class AccessTask extends AsyncTask<Integer, Integer, String> {
                     dirTo.mkdirs();
                 }
                 FileOutputStream fos = new FileOutputStream(pathTo + files[i].getName());
-                byte buf[] = new byte[1024];
+                int sz=10240000;
+                byte buf[] = new byte[sz];
                 int len;
+                float dv=0;
                 while ((len =sfis.read(buf)) != -1){
                     fos.write(buf, 0, len);
+                    dv=dv+sz;
+                    publishProgress((int)(100*(i+dv/files[i].length())/files.length));
+                  //  publishProgress((Integer)(100*i/files.length));
                 }
                 fos.flush();
                 fos.close();
